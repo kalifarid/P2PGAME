@@ -1,233 +1,87 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>P2POMNI - Serverless 200+ P2P Games</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    </style>
-</head>
-<body class="bg-slate-950 text-white min-h-screen flex flex-col justify-between">
-
-    <!-- Header -->
-    <header class="flex justify-between items-center p-6 border-b border-slate-800">
-        <div class="flex items-center space-x-3">
-            <span class="text-3xl font-extrabold tracking-wider bg-gradient-to-r from-cyan-400 to-indigo-500 bg-clip-text text-transparent">P2POMNI</span>
-            <span class="text-xs bg-slate-800 text-cyan-400 px-2 py-1 rounded-full border border-cyan-500/30">200+ Games • Zero Backend</span>
-        </div>
-        <!-- Language Switcher -->
-        <div class="flex space-x-2">
-            <button onclick="changeLang('az')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-sm transition">🇦🇿 AZ</button>
-            <button onclick="changeLang('en')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-sm transition">🇬🇧 EN</button>
-            <button onclick="changeLang('tr')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-sm transition">🇹🇷 TR</button>
-            <button onclick="changeLang('ru')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-sm transition">🇷🇺 RU</button>
-            <button onclick="changeLang('zh')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 rounded text-sm transition">🇨🇳 CN</button>
-        </div>
-    </header>
-
-    <!-- Main Container -->
-    <main class="max-w-5xl mx-auto px-4 py-8 flex-grow w-full">
-        
-        <!-- Welcome / Room Creation View -->
-        <div id="lobby-view" class="space-y-8">
-            <div class="text-center space-y-4">
-                <h1 id="hero-title" class="text-4xl md:text-5xl font-extrabold">Serverdən Asılı Olmayan P2P Oyun Dünyası</h1>
-                <p id="hero-desc" class="text-slate-400 max-w-xl mx-auto">2-dən 6 nəfərə qədər dostlarınla eyni otaqda birləş, istədiyin kateqoriyadan 50+ oyunu dərhal oyna.</p>
-            </div>
-
-            <!-- Room Actions Card -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-900 border border-slate-800 p-8 rounded-2xl shadow-xl">
-                <!-- Create Room -->
-                <div class="space-y-4 flex flex-col justify-between">
-                    <div>
-                        <h2 class="text-xl font-bold text-cyan-400" id="create-room-title">Otaq Yarat</h2>
-                        <p class="text-sm text-slate-400 mt-1" id="create-room-desc">Yeni otaq kodu yarat və dostlarını dəvət et.</p>
-                    </div>
-                    <button onclick="createRoom()" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 font-bold rounded-xl shadow-lg transition duration-200">
-                        Otaq Aç
-                    </button>
-                </div>
-
-                <!-- Join Room -->
-                <div class="space-y-4 flex flex-col justify-between border-t md:border-t-0 md:border-l border-slate-800 pt-6 md:pt-0 md:pl-6">
-                    <div>
-                        <h2 class="text-xl font-bold text-indigo-400" id="join-room-title">Otağa Qoşul</h2>
-                        <p class="text-sm text-slate-400 mt-1" id="join-room-desc">Dostundan aldığın otaq kodunu daxil et.</p>
-                    </div>
-                    <div class="space-y-3">
-                        <input type="text" id="room-code-input" placeholder="Məs: OMNI-8421" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center uppercase tracking-widest text-cyan-300 focus:outline-none focus:border-cyan-500">
-                        <button onclick="joinRoom()" class="w-full py-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 font-bold rounded-xl transition duration-200">
-                            Qoşul
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Categories Grid (200+ Games Breakdown) -->
-            <div class="space-y-4">
-                <h3 class="text-2xl font-bold text-slate-200" id="cat-header">Oyun Kateqoriyaları (Hər birində 50 Oyun)</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div onclick="selectCategory(2)" class="bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-cyan-500 p-5 rounded-xl cursor-pointer transition">
-                        <span class="text-cyan-400 font-bold text-lg">2 Oyunçu</span>
-                        <p class="text-xs text-slate-400 mt-2">Duel, Dama, Şahmat, Refleks (50 Oyun)</p>
-                    </div>
-                    <div onclick="selectCategory(3)" class="bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-cyan-500 p-5 rounded-xl cursor-pointer transition">
-                        <span class="text-indigo-400 font-bold text-lg">3 Oyunçu</span>
-                        <p class="text-xs text-slate-400 mt-2">Taktiki üçbucaq, Növbəli tapmaca (50 Oyun)</p>
-                    </div>
-                    <div onclick="selectCategory(4)" class="bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-cyan-500 p-5 rounded-xl cursor-pointer transition">
-                        <span class="text-purple-400 font-bold text-lg">4 Oyunçu</span>
-                        <p class="text-xs text-slate-400 mt-2">Party, Ludo, Sürətli kart mübadiləsi (50 Oyun)</p>
-                    </div>
-                    <div onclick="selectCategory(6)" class="bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-cyan-500 p-5 rounded-xl cursor-pointer transition">
-                        <span class="text-pink-400 font-bold text-lg">5-6 Oyunçu</span>
-                        <p class="text-xs text-slate-400 mt-2">Kütləvi rəqabət, Viktorina, Deduksiya (50 Oyun)</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Room Dashboard View (Hidden by default) -->
-        <div id="room-view" class="hidden space-y-6">
-            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4">
-                <div>
-                    <span class="text-xs text-slate-400 uppercase tracking-wider">Aktiv Otaq Kodu</span>
-                    <h2 id="display-room-code" class="text-3xl font-extrabold text-cyan-400">OMNI-XXXX</h2>
-                </div>
-                <div class="flex items-center space-x-3">
-                    <span id="player-count-badge" class="bg-slate-800 px-4 py-2 rounded-xl text-sm border border-slate-700">Oyunçular: 1/6</span>
-                    <button onclick="leaveRoom()" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 px-4 py-2 rounded-xl text-sm transition">Otaqdan Çıx</button>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl text-center space-y-6">
-                <h3 class="text-2xl font-bold">Oyun Seçildi: <span id="selected-cat-name" class="text-cyan-400">2 Oyunçu Rejimi</span></h3>
-                <p class="text-slate-400">P2P əlaqə quruldu. 50 oyundan birini seçərək dərhal başlaya bilərsiniz.</p>
-                <div class="p-8 border border-dashed border-slate-700 rounded-xl bg-slate-950/50">
-                    <span class="text-slate-500 text-sm">[ Canvas / P2P Oyun Sahəsi Burada Aktivləşir ]</span>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="text-center py-6 border-t border-slate-800 text-xs text-slate-500">
-        P2POMNI • Saf P2P & Serverless Oyun Platforması
-    </footer>
-
-    <!-- JavaScript Logic -->
-    <script>
-        let currentRoom = null;
-        let selectedPlayerLimit = 2;
-
-        const translations = {
-            az: {
-                heroTitle: "Serverdən Asılı Olmayan P2P Oyun Dünyası",
-                heroDesc: "2-dən 6 nəfərə qədər dostlarınla eyni otaqda birləş, istədiyin kateqoriyadan 50+ oyunu dərhal oyna.",
-                createTitle: "Otaq Yarat",
-                createDesc: "Yeni otaq kodu yarat və dostlarını dəvət et.",
-                createBtn: "Otaq Aç",
-                joinTitle: "Otağa Qoşul",
-                joinDesc: "Dostundan aldığın otaq kodunu daxil et.",
-                joinBtn: "Qoşul",
-                catHeader: "Oyun Kateqoriyaları (Hər birində 50 Oyun)"
-            },
-            en: {
-                heroTitle: "Serverless P2P Gaming Universe",
-                heroDesc: "Connect with 2 to 6 friends in the same room, play 50+ games instantly from your chosen category.",
-                createTitle: "Create Room",
-                createDesc: "Generate a new room code and invite friends.",
-                createBtn: "Open Room",
-                joinTitle: "Join Room",
-                joinDesc: "Enter the room code shared by your friend.",
-                joinBtn: "Join",
-                catHeader: "Game Categories (50 Games Each)"
-            },
-            tr: {
-                heroTitle: "Serversiz P2P Oyun Evreni",
-                heroDesc: "2 ila 6 arkadaşınla aynı odada buluş, seçtiğin kategoriden 50+ oyunu hemen oyna.",
-                createTitle: "Oda Oluştur",
-                createDesc: "Yeni bir oda kodu oluştur ve arkadaşlarını davet et.",
-                createBtn: "Oda Aç",
-                joinTitle: "Odaya Katıl",
-                joinDesc: "Arkadaşından aldığın oda kodunu gir.",
-                joinBtn: "Katıl",
-                catHeader: "Oyun Kategorileri (Her birinde 50 Oyun)"
-            },
-            ru: {
-                heroTitle: "P2P Игровая Вселенная без Серверов",
-                heroDesc: "Объединяйтесь с друзьями от 2 до 6 человек в одной комнате и играйте в 50+ игр.",
-                createTitle: "Создать комнату",
-                createDesc: "Сгенерируйте код комнаты и пригласите друзей.",
-                createBtn: "Открыть комнату",
-                joinTitle: "Войти в комнату",
-                joinDesc: "Введите код комнаты, полученный от друга.",
-                joinBtn: "Войти",
-                catHeader: "Категории игр (по 50 игр в каждой)"
-            },
-            zh: {
-                heroTitle: "无服务器 P2P 游戏世界",
-                heroDesc: "与 2 到 6 位朋友在同一房间连接，立即畅玩 50 多款游戏。",
-                createTitle: "创建房间",
-                createDesc: "生成新的房间代码并邀请好友。",
-                createBtn: "打开房间",
-                joinTitle: "加入房间",
-                joinDesc: "输入朋友分享的房间代码。",
-                joinBtn: "加入",
-                catHeader: "游戏分类（每类50款游戏）"
-            }
-        };
-
-        function changeLang(lang) {
-            const t = translations[lang];
-            if (!t) return;
-            document.getElementById('hero-title').innerText = t.heroTitle;
-            document.getElementById('hero-desc').innerText = t.heroDesc;
-            document.getElementById('create-room-title').innerText = t.createTitle;
-            document.getElementById('create-room-desc').innerText = t.createDesc;
-            document.getElementById('join-room-title').innerText = t.joinTitle;
-            document.getElementById('join-room-desc').innerText = t.joinDesc;
-            document.getElementById('cat-header').innerText = t.catHeader;
-        }
-
-        function generateCode() {
-            return 'OMNI-' + Math.floor(1000 + Math.random() * 9000);
-        }
-
-        function createRoom() {
-            currentRoom = generateCode();
-            document.getElementById('display-room-code').innerText = currentRoom;
-            document.getElementById('lobby-view').classList.add('hidden');
-            document.getElementById('room-view').classList.remove('hidden');
-        }
-
-        function joinRoom() {
-            const code = document.getElementById('room-code-input').value.trim().toUpperCase();
-            if (code.length < 5) {
-                alert('Zəhmət olmasa düzgün otaq kodu daxil edin!');
-                return;
-            }
-            currentRoom = code;
-            document.getElementById('display-room-code').innerText = currentRoom;
-            document.getElementById('lobby-view').classList.add('hidden');
-            document.getElementById('room-view').classList.remove('hidden');
-        }
-
-        function leaveRoom() {
-            currentRoom = null;
-            document.getElementById('room-view').classList.add('hidden');
-            document.getElementById('lobby-view').classList.remove('hidden');
-        }
-
-        function selectCategory(players) {
-            selectedPlayerLimit = players;
-            document.getElementById('selected-cat-name').innerText = players + " Oyunçu Rejimi";
-            createRoom();
-        }
-    </script>
-</body>
-</html>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070b18">
+<title>P2POMNI — Play Together</title>
+<style>
+:root{--bg:#070b18;--panel:#10182b;--panel2:#151f36;--line:#263653;--cyan:#51e5f5;--blue:#637bff;--pink:#ff6ab5;--text:#f4f7ff;--muted:#94a3bd;--green:#5ee6a8}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% -10%,#142c54 0,transparent 42%),radial-gradient(ellipse at 100% 10%,#241849 0,transparent 35%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button,input,select{font:inherit}button{cursor:pointer;color:inherit;border:0}.shell{max-width:1240px;margin:auto;padding:22px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #ffffff15;padding:10px 0 20px}.brand{font-size:27px;font-weight:950;letter-spacing:1.5px;background:linear-gradient(90deg,var(--cyan),#8b8cff,var(--pink));color:transparent;background-clip:text}.brand small{display:block;font-size:10px;letter-spacing:3px;color:var(--muted);background:none;margin-top:-4px}.topright{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.pill,.btn,.field{border:1px solid var(--line);background:#111a2d;border-radius:12px;padding:10px 14px;color:var(--text)}.pill{font-size:12px;color:var(--green)}.btn{font-weight:750;transition:.18s}.btn:hover{transform:translateY(-1px);border-color:var(--cyan);background:#172642}.btn.primary{background:linear-gradient(100deg,#167f9a,#4d60d9);border:0}.btn.pink{background:linear-gradient(100deg,#a83b82,#634ed0);border:0}.btn.danger{color:#ff8c9b;border-color:#74394a}.hero{padding:48px 12px 30px;text-align:center}.eyebrow{color:var(--cyan);font-size:11px;letter-spacing:3px;font-weight:900}.hero h1{font-size:clamp(32px,5vw,58px);line-height:1.06;max-width:850px;margin:14px auto;background:linear-gradient(100deg,#fff 20%,#8beaff 65%,#b4a4ff);color:transparent;background-clip:text}.hero p{color:var(--muted);max-width:650px;margin:12px auto}.stats{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:22px}.stat{background:#ffffff08;border:1px solid #ffffff12;border-radius:14px;padding:10px 16px;font-size:12px;color:var(--muted)}.stat b{color:#fff;font-size:18px;display:block}.layout{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;margin:18px 0}.panel{background:linear-gradient(145deg,#121d33ed,#0d1527f2);border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 16px 45px #0003}.panel h2,.panel h3{margin:0 0 8px}.muted{color:var(--muted)}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.field{width:100%;outline:none}.field:focus{border-color:var(--cyan)}.row{display:flex;gap:9px}.row>*{flex:1;min-width:0}.sectionhead{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:28px 0 14px}.sectionhead h2{margin:0;font-size:22px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.filter{padding:8px 12px;border-radius:99px;background:#101a2e;border:1px solid var(--line);font-size:12px;color:var(--muted)}.filter.active{background:#15364b;border-color:var(--cyan);color:var(--cyan)}.games{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.game{background:#111b30;border:1px solid #263653;border-radius:16px;padding:14px;min-height:148px;display:flex;flex-direction:column;transition:.2s;cursor:pointer}.game:hover{transform:translateY(-3px);border-color:#5acfe8;box-shadow:0 12px 30px #0004}.game .emoji{font-size:25px}.game h3{font-size:14px;margin:8px 0 3px}.game p{font-size:11px;color:var(--muted);margin:0}.gamefoot{margin-top:auto;padding-top:10px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--cyan)}.tag{font-size:10px;border:1px solid #ffffff20;border-radius:99px;padding:3px 7px;color:#c4cce0}.hidden{display:none!important}.roombar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.code{font-size:25px;color:var(--cyan);font-weight:900;letter-spacing:2px}.players{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.player{background:#1a2942;border:1px solid #304464;padding:7px 10px;border-radius:10px;font-size:12px}.gamezone{margin-top:15px;min-height:300px;background:#0a1222;border:1px solid #293b5b;border-radius:18px;padding:20px;text-align:center}.gamezone h2{margin:4px}.big{font-size:clamp(42px,9vw,78px);font-weight:950;letter-spacing:2px;margin:22px 0}.arena{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0}.tile{width:76px;height:76px;border-radius:14px;background:#172640;border:1px solid #385173;font-size:28px;font-weight:900}.tile:hover{border-color:var(--cyan)}.tile:disabled{opacity:.7;cursor:default}.result{color:var(--green);font-weight:800;min-height:26px}.notice{border:1px solid #665b2f;background:#332b14;color:#f7d98b;padding:12px;border-radius:12px;font-size:12px;margin-top:12px}.good{color:var(--green)}.bad{color:#ff879a}.modalback{position:fixed;inset:0;background:#020611c9;display:grid;place-items:center;padding:18px;z-index:10}.modal{width:min(620px,100%);max-height:90vh;overflow:auto;background:#111b30;border:1px solid #385173;border-radius:20px;padding:22px;box-shadow:0 30px 90px #0009}.modalhead{display:flex;justify-content:space-between;gap:10px;align-items:center}.modal textarea{width:100%;min-height:100px;resize:vertical;background:#080f1e;border:1px solid var(--line);border-radius:12px;color:#fff;padding:12px;margin:8px 0}.footer{text-align:center;color:#687894;font-size:11px;padding:28px 0}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#e8faff;color:#081321;padding:11px 17px;border-radius:12px;font-weight:800;z-index:20;box-shadow:0 8px 30px #0008}
+@media(max-width:900px){.games{grid-template-columns:repeat(3,1fr)}}@media(max-width:650px){.shell{padding:14px}.top{align-items:flex-start;flex-direction:column}.layout{grid-template-columns:1fr}.games{grid-template-columns:repeat(2,1fr)}.hero{padding-top:32px}.panel{padding:16px}.tile{width:64px;height:64px}}
+</style></head>
+<body><div class="shell">
+<header class="top"><div><div class="brand">P2POMNI<small>PLAY TOGETHER · CONNECT DIRECTLY</small></div></div><div class="topright"><span class="pill" id="netState">● LOCAL MODE</span><select class="field" id="lang" style="width:auto;padding:9px"><option value="az">🇦🇿 AZ</option><option value="en">🇬🇧 EN</option><option value="tr">🇹🇷 TR</option><option value="ru">🇷🇺 RU</option></select><button class="btn" onclick="openConnect()">⇄ P2P bağlantı</button></div></header>
+<section id="lobby">
+<div class="hero"><div class="eyebrow">NO ACCOUNTS · NO GAME SERVER · JUST PLAY</div><h1>Dostlarınla. Birbaşa. Limitsiz əyləncə.</h1><p>Otaq yarat, dostlarını qoş və yüzlərlə mini-oyundan birini seç. Oyunlar brauzerində işləyir, multiplayer məlumatları birbaşa cihazlar arasında ötürülür.</p><div class="stats"><div class="stat"><b>200+</b>oyun variantı</div><div class="stat"><b>2–6</b>oyunçu</div><div class="stat"><b>0</b>oyun backend-i</div><div class="stat"><b>5</b>dil</div></div></div>
+<div class="layout"><div class="panel"><h2>🚀 Oyun otağı yarat</h2><p class="muted">Otağı aç, sonra P2P bağlantı pəncərəsindən dostunu dəvət et.</p><div class="row"><input id="nickname" class="field" maxlength="18" placeholder="Ləqəbin (məs. Farid)"><select id="limit" class="field"><option value="2">2 oyunçu</option><option value="3">3 oyunçu</option><option value="4" selected>4 oyunçu</option><option value="5">5 oyunçu</option><option value="6">6 oyunçu</option></select></div><div class="actions"><button class="btn primary" onclick="createRoom()">Otaq yarat</button><button class="btn" onclick="quickPlay()">Təsadüfi oyun seç</button></div></div>
+<div class="panel"><h2>🔑 Otağa qoşul</h2><p class="muted">Dostunun paylaşdığı otaq kodunu daxil et. P2P üçün ayrıca bağlantı mübadiləsi tələb olunur.</p><input id="joinCode" class="field" placeholder="OMNI-1234"><div class="actions"><button class="btn" onclick="joinRoom()">Otağa daxil ol</button></div><p class="muted" style="font-size:11px">Qeyd: kod otağı identifikasiya edir, internet üzərindən cihazları öz-özünə birləşdirmir.</p></div></div>
+<div class="sectionhead"><div><div class="eyebrow">GAME LIBRARY</div><h2>Oyun kolleksiyası</h2><div class="muted" style="font-size:12px">10 oyun mexanikası × 20 fərqli çağırış = 200 oynana bilən variant</div></div><input id="search" class="field" style="max-width:240px" placeholder="Oyunda axtar..." oninput="renderGames()"></div>
+<div class="filters" id="filters"></div><div class="games" id="games"></div>
+</section>
+<section id="room" class="hidden"><div class="panel"><div class="roombar"><div><div class="eyebrow">ACTIVE ROOM</div><div class="code" id="roomCode">OMNI-0000</div><div class="muted" style="font-size:11px">Dəvət kodu · <span id="roomStatus">yalnız bu cihazda aktivdir</span></div></div><div class="actions"><button class="btn" onclick="copyRoom()">Kodu kopyala</button><button class="btn" onclick="openConnect()">P2P qoşul</button><button class="btn danger" onclick="leaveRoom()">Çıx</button></div></div><div class="players" id="players"></div></div>
+<div class="panel" style="margin-top:14px"><div class="roombar"><div><div class="eyebrow">GAME SESSION</div><h2 id="selectedTitle">Oyun seç</h2><div class="muted" id="selectedDesc">Aşağıdan oyun seçərək başla.</div></div><button class="btn" onclick="backToGames()">← Oyunlar</button></div><div class="gamezone" id="gamezone"><div class="big">🎮</div><h2>Bir oyun seç!</h2><p class="muted">Oyuna başlamaq üçün oyun kolleksiyasına qayıt.</p></div></div></section>
+<div class="footer">P2POMNI · Browser-powered games · No account · No game database</div></div>
+<div id="modalRoot"></div><div id="toastRoot"></div>
+<script>
+const $=id=>document.getElementById(id);
+let room=null, selected=null, pc=null, channel=null, isHost=false, players=[], gameState={}, currentFilter='Hamısı';
+const categories=['Hamısı','Strategiya','Refleks','Yaddaş','Söz','Riyaziyyat','Party','Şans','Məntiq','Sürət'];
+const seeds=[
+['⭕','X-O Arena','Strategiya','xo','3×3 klassik duel'],['🧠','Yaddaş cütləri','Yaddaş','memory','Kart cütlərini tap'],['⚡','İldırım refleksi','Refleks','reaction','Rəng dəyişən kimi kliklə'],['🎲','Zər duel','Şans','dice','Zərləri at və qalib gəl'],['🔢','Riyaziyyat sprinti','Riyaziyyat','math','Cavabı hamıdan tez tap'],['🔤','Söz ovçusu','Söz','word','Qarışıq hərflərdən sözü tap'],['🎯','Hədəf klik','Sürət','target','Hədəfləri mümkün qədər tez vur'],['🧩','Yüksək / Aşağı','Məntiq','higher','Növbəti rəqəmi təxmin et'],['❓','Blits viktorina','Party','quiz','Ümumi bilik sualları'],['🟢','Rəng yaddaşı','Yaddaş','sequence','Ardıcıllığı təkrarla']];
+const twists=['Neon','Kosmik','Turbo','Gecə','Pro','Mini','Usta','Ekstremal','Komanda','Gizli','Buz','Alov','Cyber','Retro','Ultra','Sürətli','Taktiki','Final','Duel','Çempion'];
+const games=[];for(let i=0;i<200;i++){let s=seeds[i%seeds.length],t=twists[Math.floor(i/seeds.length)];games.push({id:i+1,emoji:s[0],name:t+' '+s[1],cat:s[2],mode:s[3],desc:s[4],players:i%4===0?'2–6':'2–4',level:['Asan','Orta','Çətin'][i%3]})}
+function toast(t){let n=$('toastRoot');n.innerHTML='<div class="toast">'+t+'</div>';setTimeout(()=>n.innerHTML='',2300)}
+function renderFilters(){$('filters').innerHTML=categories.map(c=>`<button class="filter ${currentFilter===c?'active':''}" onclick="setFilter('${c}')">${c}</button>`).join('')}
+function setFilter(c){currentFilter=c;renderFilters();renderGames()}
+function renderGames(){let q=$('search').value.toLowerCase();let list=games.filter(g=>(currentFilter==='Hamısı'||g.cat===currentFilter)&&(g.name.toLowerCase().includes(q)||g.desc.toLowerCase().includes(q)));$('games').innerHTML=list.map(g=>`<article class="game" onclick="launch(${g.id})"><div class="emoji">${g.emoji}</div><h3>${g.name}</h3><p>${g.desc}</p><div class="gamefoot"><span>${g.cat}</span><span class="tag">${g.players}</span></div></article>`).join('');}
+renderFilters();renderGames();
+function createRoom(){let name=$('nickname').value.trim()||'Player 1';room='OMNI-'+Math.floor(1000+Math.random()*9000);isHost=true;players=[{name,host:true}];$('roomCode').textContent=room;$('roomStatus').textContent='otaq yaradıldı · P2P gözlənilir';$('lobby').classList.add('hidden');$('room').classList.remove('hidden');renderPlayers();toast('Otaq yaradıldı')}
+function joinRoom(){let c=$('joinCode').value.trim().toUpperCase();if(!/^OMNI-\d{4}$/.test(c)){toast('Düzgün otaq kodu daxil et');return}room=c;isHost=false;players=[{name:$('nickname').value.trim()||'Player',host:false}];$('roomCode').textContent=room;$('roomStatus').textContent='qoşulma üçün host Offer-i lazımdır';$('lobby').classList.add('hidden');$('room').classList.remove('hidden');renderPlayers();openConnect()}
+function leaveRoom(){if(pc)pc.close();pc=null;channel=null;room=null;players=[];$('room').classList.add('hidden');$('lobby').classList.remove('hidden');$('netState').textContent='● LOCAL MODE'}
+function renderPlayers(){$('players').innerHTML=players.map((p,i)=>`<span class="player">${p.host?'👑':'●'} ${escapeHtml(p.name)} ${p.host?'· Host':''}</span>`).join('')+`<span class="player">${players.length}/${$('limit').value} oyunçu</span>`}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function copyRoom(){navigator.clipboard?.writeText(room).then(()=>toast('Otaq kodu kopyalandı')).catch(()=>toast(room))}
+function quickPlay(){if(!room)createRoom();launch(1)}
+function backToGames(){$('room').classList.add('hidden');$('lobby').classList.remove('hidden');window.scrollTo(0,0)}
+function launch(id){if(!room)createRoom();selected=games.find(g=>g.id===id);$('selectedTitle').textContent=selected.emoji+' '+selected.name;$('selectedDesc').textContent=selected.desc+' · '+selected.cat;startGame(selected.mode)}
+function broadcast(data){if(channel&&channel.readyState==='open')channel.send(JSON.stringify(data))}
+function startGame(mode){gameState={mode,score:0,round:1};broadcast({type:'start',mode,game:selected?.name});let z=$('gamezone');
+if(mode==='xo'){gameState.board=Array(9).fill('');gameState.turn='X';drawXO()}
+else if(mode==='memory'){gameState.cards=[1,2,3,4,1,2,3,4].sort(()=>Math.random()-.5);gameState.open=[];gameState.matched=[];drawMemory()}
+else if(mode==='reaction'){z.innerHTML=`<h2>⚡ Refleks sınağı</h2><p class="muted">Başla düyməsini bas. Sahə yaşıl olanda dərhal kliklə!</p><button class="btn primary" onclick="reactionStart()">Başla</button><div id="reactArea" class="big">READY?</div><div class="result" id="gameResult"></div>`}
+else if(mode==='dice'){z.innerHTML=`<h2>🎲 Zər dueli</h2><p class="muted">Zəri at. Rəqibdən yüksək nəticə qazan!</p><div class="big" id="diceNum">⚄</div><button class="btn primary" onclick="rollDice()">Zəri at</button><div class="result" id="gameResult"></div>`}
+else if(mode==='math'){let a=2+Math.floor(Math.random()*18),b=2+Math.floor(Math.random()*18);gameState.answer=a+b;z.innerHTML=`<h2>🔢 Riyaziyyat sprinti</h2><div class="big">${a} + ${b} = ?</div><input class="field" id="mathAnswer" type="number" placeholder="Cavabın"><div class="actions" style="justify-content:center"><button class="btn primary" onclick="checkMath()">Yoxla</button><button class="btn" onclick="startGame('math')">Yeni sual</button></div><div class="result" id="gameResult"></div>`}
+else if(mode==='word'){let words=['PLANET','ROBOT','KOMPAS','ENERJI','KOSMOS','DOSTLUQ','ZEKA','OYUN'];let w=words[Math.floor(Math.random()*words.length)];gameState.word=w;gameState.scramble=w.split('').sort(()=>Math.random()-.5).join('');z.innerHTML=`<h2>🔤 Söz ovçusu</h2><div class="big">${gameState.scramble}</div><input class="field" id="wordAnswer" placeholder="Sözü yaz" style="max-width:300px"><div class="actions" style="justify-content:center"><button class="btn primary" onclick="checkWord()">Yoxla</button><button class="btn" onclick="startGame('word')">Başqa söz</button></div><div class="result" id="gameResult"></div>`}
+else if(mode==='target'){gameState.hits=0;gameState.left=10;z.innerHTML=`<h2>🎯 Hədəf klik</h2><p>10 saniyədə mümkün qədər çox hədəfə kliklə.</p><div class="result" id="gameResult">Xal: 0</div><button class="tile" id="targetBtn" onclick="hitTarget()">🎯</button><p class="muted" id="targetTime">10 saniyə</p><button class="btn primary" onclick="targetStart()">Başla</button>`}
+else if(mode==='higher'){let n=Math.floor(Math.random()*50)+1;gameState.number=n;z.innerHTML=`<h2>🧩 Yüksək / Aşağı</h2><p class="muted">Gizli rəqəm 1–50 arasındadır. Təxmin et!</p><input id="guess" class="field" type="number" min="1" max="50" placeholder="1–50" style="max-width:220px"><div class="actions" style="justify-content:center"><button class="btn primary" onclick="guessNumber()">Təxmin et</button></div><div class="result" id="gameResult"></div>`}
+else if(mode==='quiz'){let qs=[['Azərbaycanın paytaxtı?',['Bakı','Gəncə','Şəki'],0],['Qırmızı planet hansıdır?',['Venera','Mars','Yupiter'],1],['Bir saat neçə dəqiqədir?',[' เซ','60','100'],1],['Ən böyük okean?',['Atlantik','Hind','Sakit'],2]];gameState.q=qs[Math.floor(Math.random()*qs.length)];z.innerHTML=`<h2>❓ Blits viktorina</h2><h3>${gameState.q[0]}</h3><div class="arena">${gameState.q[1].map((v,i)=>`<button class="btn" onclick="quizAnswer(${i})">${v}</button>`).join('')}</div><div class="result" id="gameResult"></div>`}
+else if(mode==='sequence'){gameState.seq=Array.from({length:4},()=>Math.floor(Math.random()*4));gameState.step=0;z.innerHTML=`<h2>🟢 Rəng yaddaşı</h2><p class="muted">Ardıcıllığı yadda saxla, sonra eyni qaydada seç.</p><div class="arena">${['🟦','🟩','🟨','🟥'].map((e,i)=>`<button class="tile" onclick="sequencePick(${i})">${e}</button>`).join('')}</div><button class="btn primary" onclick="showSequence()">Ardıcıllığı göstər</button><div class="result" id="gameResult"></div>`}
+}
+function drawXO(){let z=$('gamezone');z.innerHTML=`<h2>⭕ X-O Arena</h2><p class="muted">Növbə: ${gameState.turn}</p><div class="arena" style="max-width:270px;margin:16px auto">${gameState.board.map((v,i)=>`<button class="tile" onclick="xoMove(${i})">${v}</button>`).join('')}</div><div class="result" id="gameResult"></div><button class="btn" onclick="startGame('xo')">Yenidən başla</button>`}
+function xoMove(i){if(gameState.board[i]||gameState.done)return;gameState.board[i]=gameState.turn;let b=gameState.board,wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];let win=wins.some(a=>a.every(k=>b[k]===gameState.turn));if(win||b.every(Boolean)){gameState.done=true;let msg=win?gameState.turn+' qalib gəldi!':'Heç-heçə!';drawXO();$('gameResult').textContent=msg;broadcast({type:'move',mode:'xo',board:b,done:true});return}gameState.turn=gameState.turn==='X'?'O':'X';broadcast({type:'move',mode:'xo',board:b,turn:gameState.turn});drawXO()}
+function drawMemory(){let z=$('gamezone');z.innerHTML=`<h2>🧠 Yaddaş cütləri</h2><p class="muted">Eyni simvolları tap. Açıq kart: ${gameState.matched.length}/4 cüt</p><div class="arena" style="max-width:390px;margin:auto">${gameState.cards.map((v,i)=>`<button class="tile" onclick="memoryFlip(${i})">${gameState.matched.includes(i)||gameState.open.includes(i)?['🍒','🚀','⭐','🎲'][v-1]:'?'}</button>`).join('')}</div><div class="result" id="gameResult"></div>`}
+function memoryFlip(i){if(gameState.open.includes(i)||gameState.matched.includes(i)||gameState.open.length===2)return;gameState.open.push(i);if(gameState.open.length===2){let [a,b]=gameState.open;if(gameState.cards[a]===gameState.cards[b]){gameState.matched.push(a,b);gameState.open=[]}else setTimeout(()=>{gameState.open=[];drawMemory()},650)}drawMemory();if(gameState.matched.length===8)$('gameResult').textContent='Möhtəşəm! Bütün cütləri tapdın.'}
+let reactionTimer=null,reactionStartAt=0;
+function reactionStart(){let area=$('reactArea');$('gameResult').textContent='Gözlə...';area.textContent='🔴';area.style.color='#ff657c';let delay=1200+Math.random()*3000;clearTimeout(reactionTimer);reactionTimer=setTimeout(()=>{reactionStartAt=performance.now();area.textContent='🟢 İNDİ!';area.style.color='#5ee6a8';area.onclick=()=>{if(!reactionStartAt)return;let ms=Math.round(performance.now()-reactionStartAt);$('gameResult').textContent='Reaksiya vaxtın: '+ms+' ms';reactionStartAt=0}},delay)}
+function rollDice(){let n=1+Math.floor(Math.random()*6);$('diceNum').textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][n-1];$('gameResult').textContent='Sənin nəticən: '+n+' / 6';gameState.score+=n;broadcast({type:'score',score:gameState.score})}
+function checkMath(){let v=Number($('mathAnswer').value);$('gameResult').textContent=v===gameState.answer?'Düzgün! +1 xal':'Bir də cəhd et.';if(v===gameState.answer)gameState.score++}
+function checkWord(){let v=$('wordAnswer').value.trim().toUpperCase();$('gameResult').textContent=v===gameState.word?'Əla! Düz tapdın.':'Düzgün deyil, yenidən yoxla.';if(v===gameState.word)gameState.score++}
+let targetInterval=null;
+function targetStart(){gameState.hits=0;gameState.left=10;$('targetTime').textContent='10 saniyə';clearInterval(targetInterval);targetInterval=setInterval(()=>{gameState.left--;$('targetTime').textContent=gameState.left+' saniyə';if(gameState.left<=0){clearInterval(targetInterval);$('targetBtn').disabled=true;$('gameResult').textContent='Bitdi! Xalın: '+gameState.hits;broadcast({type:'score',score:gameState.hits})}},1000);$('targetBtn').disabled=false}
+function hitTarget(){gameState.hits++;$('gameResult').textContent='Xal: '+gameState.hits}
+function guessNumber(){let v=Number($('guess').value);$('gameResult').textContent=v===gameState.number?'Tapdın! 🎉':v<gameState.number?'Daha böyük rəqəm yoxla.':'Daha kiçik rəqəm yoxla.';if(v===gameState.number)gameState.score++}
+function quizAnswer(i){$('gameResult').textContent=i===gameState.q[2]?'Doğru cavab! 🎉':'Yanlış cavab.';if(i===gameState.q[2])gameState.score++}
+function showSequence(){$('gameResult').textContent=gameState.seq.map(i=>['🟦','🟩','🟨','🟥'][i]).join('  ');gameState.step=0}
+function sequencePick(i){if(i!==gameState.seq[gameState.step]){$('gameResult').textContent='Yanlış ardıcıllıq. Yenidən başla.';gameState.step=0;return}gameState.step++;if(gameState.step===gameState.seq.length){$('gameResult').textContent='Mükəmməl yaddaş!';gameState.score++}}
+function openConnect(){if(!room){toast('Əvvəlcə otaq yarat');return}showModal(`<div class="modalhead"><h2>⇄ Birbaşa P2P bağlantı</h2><button class="btn" onclick="closeModal()">✕</button></div><p class="muted">Bu üsul signaling serveri olmadan işləyir. Host Offer yaradır, qonaq onu daxil edib Answer qaytarır. Mətnləri mesajla paylaşın.</p><div class="notice">Hər iki cihazda HTTPS və ya localhost tələb oluna bilər. İnternet router/firewall məhdudiyyətləri səbəbindən bəzi şəbəkələrdə bağlantı qurulmaya bilər.</div><div class="actions"><button class="btn primary" onclick="makeOffer()">1 · Host: Offer yarat</button><button class="btn" onclick="makeAnswer()">2 · Qonaq: Offer daxil et</button></div><label>Offer / Answer mətni</label><textarea id="sdpText" placeholder="Buraya qarşı tərəfin verdiyi Offer və ya Answer mətnini yapışdır..."></textarea><div class="actions"><button class="btn" onclick="applyAnswer()">Host: Answer qəbul et</button><button class="btn" onclick="copySDP()">Mətni kopyala</button></div><p id="p2pInfo" class="muted" style="font-size:12px">Bağlantı hələ qurulmayıb.</p>`)}
+function showModal(content){$('modalRoot').innerHTML=`<div class="modalback" onclick="if(event.target===this)closeModal()"><div class="modal">${content}</div></div>`}
+function closeModal(){$('modalRoot').innerHTML=''}
+async function waitIce(p){if(p.iceGatheringState==='complete')return;await new Promise(resolve=>{let t=setTimeout(resolve,7000);p.addEventListener('icegatheringstatechange',()=>{if(p.iceGatheringState==='complete'){clearTimeout(t);resolve()}},{once:false})})}
+function setupPeer(){pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});pc.onconnectionstatechange=()=>{$('netState').textContent=pc.connectionState==='connected'?'● P2P CONNECTED':'● '+pc.connectionState.toUpperCase();let info=$('p2pInfo');if(info)info.textContent='Bağlantı statusu: '+pc.connectionState};pc.ondatachannel=e=>{channel=e.channel;bindChannel()};return pc}
+function bindChannel(){channel.onopen=()=>{toast('P2P bağlantı quruldu!');$('netState').textContent='● P2P CONNECTED';broadcast({type:'hello',name:$('nickname').value.trim()||'Guest'})};channel.onmessage=e=>{try{let d=JSON.parse(e.data);if(d.type==='hello'){if(!players.some(p=>p.name===d.name))players.push({name:d.name,host:false});renderPlayers()}if(d.type==='start'&&!isHost){let g=games.find(x=>x.name===d.game);if(g){selected=g;$('selectedTitle').textContent=g.name;$('selectedDesc').textContent=g.desc;startGame(d.mode)}}if(d.type==='move'&&d.mode==='xo'&&!isHost){gameState.board=d.board;gameState.turn=d.turn||'X';gameState.done=!!d.done;drawXO()}if(d.type==='score')toast('Rəqib xal qazandı: '+d.score)}catch{}}}
+async function makeOffer(){try{if(pc)pc.close();setupPeer();channel=pc.createDataChannel('p2pomni');bindChannel();let offer=await pc.createOffer();await pc.setLocalDescription(offer);await waitIce(pc);$('sdpText').value=JSON.stringify(pc.localDescription);$('p2pInfo').textContent='Offer hazırdır. Mətni dostuna göndər.'}catch(e){toast('Offer xətası: '+e.message)}}
+async function makeAnswer(){try{let raw=$('sdpText').value.trim();if(!raw)throw Error('Əvvəl host Offer mətnini daxil et');if(pc)pc.close();setupPeer();await pc.setRemoteDescription(JSON.parse(raw));let answer=await pc.createAnswer();await pc.setLocalDescription(answer);await waitIce(pc);$('sdpText').value=JSON.stringify(pc.localDescription);$('p2pInfo').textContent='Answer hazırdır. Mətni hosta göndər.'}catch(e){toast('Answer xətası: '+e.message)}}
+async function applyAnswer(){try{if(!pc||!isHost)throw Error('Əvvəl host kimi Offer yarat');await pc.setRemoteDescription(JSON.parse($('sdpText').value.trim()));$('p2pInfo').textContent='Answer qəbul edildi. Bağlantı gözlənilir...'}catch(e){toast('Answer qəbul edilmədi: '+e.message)}}
+function copySDP(){let t=$('sdpText').value;if(!t){toast('Kopyalamaq üçün mətn yoxdur');return}navigator.clipboard?.writeText(t).then(()=>toast('P2P mətni kopyalandı')).catch(()=>toast('Mətni əl ilə seçib kopyala'))}
+</script></body></html>
